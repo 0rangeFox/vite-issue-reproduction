@@ -1,35 +1,29 @@
 import { defineConfig } from 'vite';
+import { builtinModules } from 'module';
 
-export const name = 'server-node';
+const name = 'server-node';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  optimizeDeps: {
-    exclude: [
-      'perf_hooks',
-      'pg-native'
-    ]
-  },
   build: {
     target: 'ESNext',
+    minify: false,
     lib: {
-      name,
       entry: 'src/index.ts',
+      name,
       formats: [
         'cjs'
       ],
       fileName: (format) => `${name}.${format}.js`
     },
     rollupOptions: {
-      external: [
-        'perf_hooks',
-        'pg-native'
-      ],
-      output: {
-        globals: {
-          perf_hooks: 'perf_hooks'
-        }
-      }
+      external: builtinModules
+    },
+    commonjsOptions: {
+      ignore: [
+        'pg-native',
+        './native'
+      ]
     }
   }
 });
